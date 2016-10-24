@@ -103,7 +103,7 @@ for (h in 4:nrow(dataSources)) {            # for each satellite product
   fileList <- list.files(paste(sourceURL, sourceData, sep = ''), recursive = FALSE)
   
   ########## FOR EACH DAY 'i'
-  for (i in 1:length(fileList)){
+  for (i in 1:10){#length(fileList)){
   
     # Get a list of files for this date for each sensor
     cat(paste("\nStarting on day", i,"\n"))
@@ -128,9 +128,9 @@ for (h in 4:nrow(dataSources)) {            # for each satellite product
     temp.df <- mcmapply(get_5nearest, my.data[,2], my.data[,3],my.data[,1],mc.cores = 5L,SIMPLIFY=FALSE)
     
     # append to mylist
-    mylist <- mapply(rbind,mylist,temp.df,SIMPLIFY=FALSE,fill=TRUE)
+    mylist <- mapply(rbind,mylist,temp.df,SIMPLIFY=FALSE)
     
-    rm(dateStr,temp.date, temp.df)
+    rm(dateStr,temp_date, temp.df)
     
   } # for each day 'i'
   
@@ -141,6 +141,7 @@ for (h in 4:nrow(dataSources)) {            # for each satellite product
     #myFrame <- do.call(rbind, c(mylist[[k]], make.row.names=FALSE))     # combine all the daily data into dataframe
     myFrame <- mylist[[k]]
     myFrame <- myFrame[!is.na(myFrame$date),]                           # remove NA rows (< 5 observations)
+    myFrame$date <- as.character(myFrame$date)                          # data.table::fwrite does not handle 'dates'
     myFrame <- cbind(
       depth=rownames(my.data)[k],
       product=product,
@@ -151,7 +152,7 @@ for (h in 4:nrow(dataSources)) {            # for each satellite product
                        my.data[k,1],"_",rownames(my.data)[k],
                        "_SST_timeseries_5nearest.csv",sep = '')
     
-    data.table::fwrite(myFrame, file = filename1, row.names = FALSE)
+    data.table::fwrite(myFrame, file = filename1)
     rm(myFrame, filename1)
     gc()
   } # for each 'k'
