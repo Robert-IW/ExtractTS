@@ -26,7 +26,7 @@ get_5nearest <- function(lon,lat,station){
   if (nrow(sub.df) == 0){
     #cat(paste("No data found for station",j,"\n"))
     sub.df <- data.frame(lon=NA,lat=NA,SST=NA)
-    sub.df  <- cbind(date = temp_date,sub.df,dist = NA,don = don)
+    sub.df  <- cbind(date = temp_date,sub.df,dist = NA,don = don,statiop = station)
     #mylist[[j]][[i]] <- sub.df
     #rm(sub.df)
     return(sub.df)

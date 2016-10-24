@@ -42,8 +42,8 @@ my.data <- all_samples
 
 # Get the coordinates
 #source("func_perpCont.R")
-sourceURL <-("/media/robert/Seagate Backup Plus Drive/SST/GHRSST/")
-#sourceURL <-("/media/robert/Seagate Backup Plus Drive/Backup Satellite Data/SST/GHRSST/")
+#sourceURL <-("/media/robert/Seagate Backup Plus Drive/SST/GHRSST/")
+sourceURL <-("/media/robert/Seagate Backup Plus Drive/Backup Satellite Data/SST/GHRSST/")
 
 # create directory strings for file locations
 product <- c(
@@ -87,7 +87,7 @@ sensorRes <- c(4,25,20,1,10,1,9,9,10,5)       # vector of product pixel resoluti
 dataSources <-data.frame(product,sourceCSV,saveTS,sensorRes,stringsAsFactors = FALSE)
 rm(product,sourceCSV,saveTS,sensorRes)
 
-for (h in 3:3){#:nrow(dataSources)) {            # for each satellite product
+for (h in 4:nrow(dataSources)) {            # for each satellite product
   
   # create empty list for all the days data
   mylist <- sapply(my.data[,1],function(x) NULL)
@@ -128,7 +128,7 @@ for (h in 3:3){#:nrow(dataSources)) {            # for each satellite product
     temp.df <- mcmapply(get_5nearest, my.data[,2], my.data[,3],my.data[,1],mc.cores = 5L,SIMPLIFY=FALSE)
     
     # append to mylist
-    mylist <- mapply(rbind,mylist,temp.df,SIMPLIFY=FALSE)
+    mylist <- mapply(rbind,mylist,temp.df,SIMPLIFY=FALSE,fill=TRUE)
     
     rm(dateStr,temp.date, temp.df)
     
